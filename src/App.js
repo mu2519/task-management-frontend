@@ -66,6 +66,7 @@ export default function App() {
       },
       body: JSON.stringify(newRow.deadline ? {title: newRow.title, description: newRow.description, deadline: newRow.deadline} : {title: newRow.title, description: newRow.description})
     });
+    setTasks(tasks.map(task => task.id === newRow.id ? newRow : task));
     return newRow;
   }
 
