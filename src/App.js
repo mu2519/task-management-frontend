@@ -2,15 +2,14 @@ import './App.css';
 import { useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
-import Stack from '@mui/material/Stack';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { GridActionsCellItem } from '@mui/x-data-grid';
 
 
 export default function App() {
   const [loggedin, setLoggedin] = useState(false);
   const [tasks, setTasks] = useState([]);
-  const [selectedTasks, setSelectedTasks] = useState([]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -42,13 +41,16 @@ export default function App() {
     setLoggedin(true);
   }
 
-  function handleDeletion() {
-    selectedTasks.forEach(task_id => fetch('http://localhost:8000/tasks/' + task_id, {
-      method: 'DELETE',
-      mode: 'cors',
-      credentials: 'include'
-    }));
-    setTasks(tasks.filter(task => selectedTasks.every(task_id => task_id !== task.id)));
+  function makeHandleDelete(id) {
+    function handleDelete() {
+      fetch('http://localhost:8000/tasks/' + id, {
+        method: 'DELETE',
+        mode: 'cors',
+        credentials: 'include'
+      });
+      setTasks(tasks.filter(task => task.id !== id));
+    }
+    return handleDelete;
   }
 
   function processRowUpdate(newRow) {
@@ -80,9 +82,15 @@ export default function App() {
 
   const rows = tasks;
   const columns = [
-    { field: 'title', headerName: 'Title', editable: true },
-    { field: 'description', headerName: 'Description', editable: true },
-    { field: 'deadline', headerName: 'Deadline', type: 'dateTime', editable: true },
+    { field: 'title', headerName: 'Title', editable: true, flex: 1 },
+    { field: 'description', headerName: 'Description', editable: true, flex: 4 },
+    { field: 'deadline', headerName: 'Deadline', type: 'dateTime', editable: true, flex: 2 },
+    {
+      field: 'actions',
+      type: 'actions',
+      getActions: params => [<GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={makeHandleDelete(params.id)} />],
+      flex: 0.5,
+    },
   ];
 
   return (
@@ -92,15 +100,10 @@ export default function App() {
           <DataGrid
             rows={rows}
             columns={columns}
-            checkboxSelection
-            rowSelectionModel={selectedTasks}
-            onRowSelectionModelChange={newSelectedTasks => setSelectedTasks(newSelectedTasks)}
             processRowUpdate={processRowUpdate}
+            disableRowSelectionOnClick
           />
-          <Stack direction="row" spacing={2}>
-            <Button variant="outlined" startIcon={<AddIcon />} onClick={handleCreate}>add</Button>
-            <Button variant="outlined" startIcon={<DeleteIcon />} onClick={handleDeletion}>delete</Button>
-          </Stack>
+          <Button variant="outlined" startIcon={<AddIcon />} onClick={handleCreate}>add</Button>
         </div>
       ) : (
         <form method="post" onSubmit={handleSubmit}>
