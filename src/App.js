@@ -43,12 +43,12 @@ export default function App() {
   }
 
   function handleDeletion() {
-    selectedTasks.forEach(task => fetch('http://localhost:8000/tasks/' + task, {
+    selectedTasks.forEach(task_id => fetch('http://localhost:8000/tasks/' + task_id, {
       method: 'DELETE',
       mode: 'cors',
       credentials: 'include'
     }));
-    setTasks(tasks.filter(task => selectedTasks.every(task_id => task_id !== task.task_id)));
+    setTasks(tasks.filter(task => selectedTasks.every(task_id => task_id !== task.id)));
   }
 
   function processRowUpdate(newRow) {
@@ -61,8 +61,8 @@ export default function App() {
       },
       body: JSON.stringify(newRow.deadline ? {title: newRow.title, description: newRow.description, deadline: newRow.deadline} : {title: newRow.title, description: newRow.description})
     });
-    const idx = tasks.findIndex(e => e.task_id === newRow.id);
-    tasks[idx] = {...newRow, task_id: newRow.id};
+    const idx = tasks.findIndex(e => e.id === newRow.id);
+    tasks[idx] = newRow;
     return newRow;
   }
 
@@ -80,7 +80,7 @@ export default function App() {
     .then(data => setTasks([...tasks, data]));
   }
 
-  const rows = tasks.map(task => ({id: task.task_id, title: task.title, description: task.description, deadline: task.deadline ? task.deadline : null}));
+  const rows = tasks;
   const columns = [
     { field: 'title', headerName: 'Title', editable: true },
     { field: 'description', headerName: 'Description', editable: true },
