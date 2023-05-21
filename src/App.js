@@ -11,6 +11,8 @@ import Stack from '@mui/material/Stack';
 
 
 export default function App() {
+  const baseURL = 'http://157.7.212.125:5000';
+
   const [loggedin, setLoggedin] = useState(false);
   const [tasks, setTasks] = useState([]);
 
@@ -22,7 +24,7 @@ export default function App() {
     const data = Object.fromEntries(formData.entries());
 
     (async () => {
-      await fetch('http://localhost:8000/users/', {
+      await fetch(baseURL + '/users/', {
         method: 'POST',
         mode: 'cors',
         credentials: 'include',
@@ -32,7 +34,7 @@ export default function App() {
         body: JSON.stringify(data)
       });
 
-      await fetch('http://localhost:8000/users/', {
+      await fetch(baseURL + '/users/', {
         method: 'GET',
         mode: 'cors',
         credentials: 'include'
@@ -46,7 +48,7 @@ export default function App() {
 
   function makeHandleDelete(id) {
     function handleDelete() {
-      fetch('http://localhost:8000/tasks/' + id, {
+      fetch(baseURL + '/tasks/' + id, {
         method: 'DELETE',
         mode: 'cors',
         credentials: 'include'
@@ -57,7 +59,7 @@ export default function App() {
   }
 
   function processRowUpdate(newRow) {
-    fetch('http://localhost:8000/tasks/' + newRow.id, {
+    fetch(baseURL + '/tasks/' + newRow.id, {
       method: 'PUT',
       mode: 'cors',
       credentials: 'include',
@@ -71,7 +73,7 @@ export default function App() {
   }
 
   function handleCreate() {
-    fetch('http://localhost:8000/tasks/', {
+    fetch(baseURL + '/tasks/', {
       method: 'POST',
       mode: 'cors',
       credentials: 'include',
