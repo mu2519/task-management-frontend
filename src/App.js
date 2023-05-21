@@ -61,8 +61,6 @@ export default function App() {
       },
       body: JSON.stringify(newRow.deadline ? {title: newRow.title, description: newRow.description, deadline: newRow.deadline} : {title: newRow.title, description: newRow.description})
     });
-    const idx = tasks.findIndex(e => e.id === newRow.id);
-    tasks[idx] = newRow;
     return newRow;
   }
 
