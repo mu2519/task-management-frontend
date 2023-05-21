@@ -5,6 +5,9 @@ import { Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { GridActionsCellItem } from '@mui/x-data-grid';
+import Box from '@mui/material/Box';
+import { TextField } from '@mui/material';
+import Stack from '@mui/material/Stack';
 
 
 export default function App() {
@@ -106,16 +109,13 @@ export default function App() {
           <Button variant="outlined" startIcon={<AddIcon />} onClick={handleCreate}>add</Button>
         </div>
       ) : (
-        <form method="post" onSubmit={handleSubmit}>
-          <label>
-            Username: <input type="text" name="username" />
-          </label>
-          <label>
-            Password: <input type="password" name="password" />
-          </label>
-          <button type="reset">Reset</button>
-          <button type="submit">Submit</button>
-        </form>
+        <Box component="form" method="post" onSubmit={handleSubmit} sx={{width: 300}}>
+          <Stack direction="column" spacing={2}>
+            <TextField type="text" id="username" name="username" label="Username" />
+            <TextField type="password" id="password" name="password" label="Password" />
+            <Button type="submit" variant="contained">sign in / sign up</Button>
+          </Stack>
+        </Box>
       )}
     </div>
   )
